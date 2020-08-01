@@ -14,7 +14,7 @@ function query_file($file)
 
     try {
         $driver = 'MDBTools';
-        $dbh = new  PDO("odbc:Driver=" . $driver . ";DBQ=" . $dbName . ";");
+        $dbh = new PDO("odbc:Driver=" . $driver . ";DBQ=" . $dbName . ";charset=CP1252");//ISO-8859-1");
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e1) {
         if (VERBOSE) {
@@ -24,7 +24,7 @@ function query_file($file)
 
         try {
             $driver = "Microsoft Access Driver (*.mdb)";
-            $dbh = new  PDO("odbc:Driver=" . $driver . ";DBQ=" . $dbName . ";");
+            $dbh = new  PDO("odbc:Driver=" . $driver . ";DBQ=" . $dbName . ";charset=utf8");
             $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e2) {
             print_r('ExceptionPDOCreation -> ' . $e2->getMessage());
@@ -85,9 +85,17 @@ function query_file($file)
     // T_DetailOperation contient les détails sur les produits des opérations
 
     try {
-        $sql = "SELECT * FROM T_DetailOperation";  // The rules are the same as above
+        $sql = "SELECT IdOperation, idFournisseur, Quantite, PrixUnitaire, DesignationProduit FROM T_DetailOperation";  // The rules are the same as above
         $sth = $dbh->prepare($sql);
         $sth->execute();
+
+        //IdOperation, DesignationProduit, idFournisseur, Quantite, PrixUnitaire
+
+        $sth->bindColumn("DesignationProduit", $colDesignationProduit, PDO::PARAM_STR);
+        $sth->bindColumn("Quantite", $colQuantite, PDO::PARAM_INT);
+        $sth->bindColumn("PrixUnitaire", $colPrixUnitaire, PDO::PARAM_INT);
+        $sth->bindColumn("idFournisseur", $colidFournisseur, PDO::PARAM_INT);
+        $sth->bindColumn("IdOperation", $colIdOperation, PDO::PARAM_INT);
     } catch (Exception $e) {
         print_r('ExceptionT_DetailOperation -> ' . $e->getMessage());
         return false;
@@ -95,7 +103,14 @@ function query_file($file)
     $detail_operations = array();
 
     while ($flg = $sth->fetch(PDO::FETCH_ASSOC)) {
-        $detail_operations[] = $flg;
+	print_r($flg);
+        $detail_operations[] = array(
+            "DesignationProduit" => $colDesignationProduit,
+            "Quantite" => $colQuantite,
+            "PrixUnitaire" => $colPrixUnitaire,
+            "idFournisseur" => $colidFournisseur,
+            "IdOperation" => $colIdOperation,
+        );
     }
 
     return json_encode(array(
@@ -109,6 +124,7 @@ function query_file($file)
 if (isset($_GET["file_mdb"])) {
     $file = $_GET["file_mdb"];
     if (file_exists("uploads/" . $file)) {
-        query_file($file);
+        echo query_file($file);
     }
 }
+
