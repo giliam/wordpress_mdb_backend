@@ -1,6 +1,5 @@
 <?php
 require_once "parameters.php";
-define("VERBOSE", false);
 
 function manage_file($file)
 {
@@ -70,7 +69,7 @@ if (isset($_POST["token"]) && isset($_POST["date"]) && isset($_POST["hour"])) {
                 var_dump($query);
                 echo "Query executed<br />";
             }
-            delete_file($file["name"]);
+            //delete_file($file["name"]);
             if ($query !== false) {
                 header('Content-Type: application/json');
                 echo $query;
