@@ -142,7 +142,7 @@ function query_file($file)
 if (isset($_GET["file_mdb"])) {
     $file = $_GET["file_mdb"];
     if (file_exists("uploads/" . $file)) {
-        echo query_file($file);
+        query_file($file);
     }
 }
 

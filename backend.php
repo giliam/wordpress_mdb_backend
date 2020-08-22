@@ -1,3 +1,4 @@
+
 <?php
 require_once "parameters.php";
 
@@ -43,6 +44,13 @@ function delete_file($file)
     }
 }
 
+if(VERBOSE){
+   var_dump($_POST);
+   var_dump($_GET);
+   var_dump($_FILES);
+}
+
+
 if (isset($_POST["token"]) && isset($_POST["date"]) && isset($_POST["hour"])) {
     require_once "query.php";
 
@@ -82,4 +90,12 @@ if (isset($_POST["token"]) && isset($_POST["date"]) && isset($_POST["hour"])) {
         if (VERBOSE)
             echo "NOI";
     }
+}
+else{
+   if(VERBOSE){
+      echo "Missing paramater.";
+      var_dump($_POST);
+      var_dump($_GET);
+      var_dump($_FILES);
+   }
 }
