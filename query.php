@@ -15,7 +15,7 @@ function query_file($file)
     try {
         $driver = 'MDBTools';
         $dbh = new PDO("odbc:Driver=" . $driver . ";DBQ=" . $dbName . ";charset=utf8");
-	//CP1252");//ISO-8859-1");
+        //CP1252");//ISO-8859-1");
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e1) {
         if (VERBOSE) {
@@ -103,13 +103,13 @@ function query_file($file)
     // T_DetailOperation contient les détails sur les produits des opérations
 
     try {
-        $sql = "SELECT IdOperation, idFournisseur, Quantite, PrixUnitaire, IdProduit FROM T_DetailOperation";  // The rules are the same as above
+        $sql = "SELECT IdOperation, idFournisseur, Quantite, PrixUnitaire, Poduits_FKID FROM T_DetailOperation";  // The rules are the same as above
         $sth = $dbh->prepare($sql);
         $sth->execute();
 
         //IdOperation, DesignationProduit, idFournisseur, Quantite, PrixUnitaire
 
-        $sth->bindColumn("IdProduit", $colIdProduit, PDO::PARAM_INT);
+        $sth->bindColumn("Poduits_FKID", $colIdProduit, PDO::PARAM_INT);
         $sth->bindColumn("Quantite", $colQuantite, PDO::PARAM_INT);
         $sth->bindColumn("PrixUnitaire", $colPrixUnitaire, PDO::PARAM_INT);
         $sth->bindColumn("idFournisseur", $colidFournisseur, PDO::PARAM_INT);
@@ -135,7 +135,7 @@ function query_file($file)
         "operations" => $operations,
         "accomptes" => $accomptes,
         "detail_operations" => $detail_operations,
-	"products"=> $products,
+        "products" => $products,
     ));
 }
 
@@ -145,4 +145,3 @@ if (isset($_GET["file_mdb"])) {
         query_file($file);
     }
 }
-
