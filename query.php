@@ -110,8 +110,8 @@ function query_file($file)
         //IdOperation, DesignationProduit, idFournisseur, Quantite, PrixUnitaire
 
         $sth->bindColumn("Poduits_FKID", $colIdProduit, PDO::PARAM_INT);
-        $sth->bindColumn("Quantite", $colQuantite, PDO::PARAM_INT);
-        $sth->bindColumn("PrixUnitaire", $colPrixUnitaire, PDO::PARAM_INT);
+        $sth->bindColumn("Quantite", $colQuantite, PDO::PARAM_STR);
+        $sth->bindColumn("PrixUnitaire", $colPrixUnitaire, PDO::PARAM_STR);
         $sth->bindColumn("idFournisseur", $colidFournisseur, PDO::PARAM_INT);
         $sth->bindColumn("IdOperation", $colIdOperation, PDO::PARAM_INT);
     } catch (Exception $e) {
