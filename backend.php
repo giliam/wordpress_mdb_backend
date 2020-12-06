@@ -11,7 +11,7 @@ function __log($text, $prefixe = "")
             __log($value, $prefixe);
         }
     } else {
-        file_put_contents("log.txt", $text . "\n", FILE_APPEND);
+        file_put_contents("../../logs/consigne.log", $prefixe . $text . "\n", FILE_APPEND);
     }
 }
 
@@ -80,9 +80,9 @@ if (VERBOSE) {
     var_dump($_GET);
     var_dump($_FILES);
 } else {
-    __log($_POST);
-    __log($_GET);
-    __log($_FILES);
+    __log($_POST, "---post---");
+    __log($_GET, "---get---");
+    __log($_FILES, "---files---");
 }
 
 
@@ -99,7 +99,7 @@ if (isset($_POST["token"]) && isset($_POST["date"]) && isset($_POST["hour"])) {
         if (VERBOSE)
             echo "YES WELL RECEIVED<br />";
         else
-            __log("YES WELL RECEIVED<br />");
+            __log("YES WELL RECEIVED");
         $file = $_FILES["file"];
         if (VERBOSE) {
             var_dump($file);
