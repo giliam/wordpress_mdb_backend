@@ -2,6 +2,19 @@
 <?php
 require_once "parameters.php";
 
+function __log($text, $prefixe = "")
+{
+    if (is_array($text)) {
+        $prefixe .= "\t";
+        foreach ($text as $key => $value) {
+            __log($prefixe . $key);
+            __log($value, $prefixe);
+        }
+    } else {
+        file_put_contents("log.txt", $text . "\n", FILE_APPEND);
+    }
+}
+
 function manage_file($file)
 {
     $targetFileName = basename($file["name"]);
@@ -9,12 +22,18 @@ function manage_file($file)
     if ($imageFileType != "mdb") {
         if (VERBOSE)
             echo "Wrong file type<br />";
+        else {
+            __log("Wrong file type<br />");
+        }
         return false;
     }
     $targetFile = MDB_UPLOAD_FOLDER_PATH . $targetFileName;
     if (file_exists($targetFile)) {
         if (VERBOSE)
             echo "Deletes file...<br />";
+        else {
+            __log("Deletes file...<br />");
+        }
         delete_file($targetFileName);
     }
 
@@ -23,6 +42,9 @@ function manage_file($file)
     } else {
         if (VERBOSE)
             echo "Couldn't move file from " . $file["tmp_name"] . " to " .  $targetFile . "<br />";
+        else {
+            __log("Couldn't move file from " . $file["tmp_name"] . " to " .  $targetFile);
+        }
         return false;
     }
 }
@@ -33,21 +55,34 @@ function delete_file($file)
         if (file_exists(MDB_UPLOAD_FOLDER_PATH . $file)) {
             if (VERBOSE)
                 echo "Deleted file<br />";
+            else {
+                __log("Deleted file<br />");
+            }
             unlink(MDB_UPLOAD_FOLDER_PATH . $file);
         } else {
             if (VERBOSE)
                 echo "File couldn't be found in " . MDB_UPLOAD_FOLDER_PATH . $file;
+            else {
+                __log("File couldn't be found in " . MDB_UPLOAD_FOLDER_PATH . $file);
+            }
         }
     } else {
         if (VERBOSE)
             echo "Found .. in filename.";
+        else {
+            __log("Found .. in filename.");
+        }
     }
 }
 
-if(VERBOSE){
-   var_dump($_POST);
-   var_dump($_GET);
-   var_dump($_FILES);
+if (VERBOSE) {
+    var_dump($_POST);
+    var_dump($_GET);
+    var_dump($_FILES);
+} else {
+    __log($_POST);
+    __log($_GET);
+    __log($_FILES);
 }
 
 
@@ -63,12 +98,17 @@ if (isset($_POST["token"]) && isset($_POST["date"]) && isset($_POST["hour"])) {
     if ($token == $check_token) {
         if (VERBOSE)
             echo "YES WELL RECEIVED<br />";
+        else
+            __log("YES WELL RECEIVED<br />");
         $file = $_FILES["file"];
         if (VERBOSE) {
             var_dump($file);
             echo "<br />";
             var_dump($file["error"] == UPLOAD_ERR_OK);
             echo "<br />";
+        } else {
+            __log($file);
+            __log($file['error']);
         }
         $moveFile = manage_file($file);
         if ($moveFile !== false) {
@@ -76,6 +116,8 @@ if (isset($_POST["token"]) && isset($_POST["date"]) && isset($_POST["hour"])) {
             if (VERBOSE) {
                 var_dump($query);
                 echo "Query executed<br />";
+            } else {
+                __log("Query executed");
             }
             //delete_file($file["name"]);
             if ($query !== false) {
@@ -85,17 +127,23 @@ if (isset($_POST["token"]) && isset($_POST["date"]) && isset($_POST["hour"])) {
         } else {
             if (VERBOSE)
                 echo "Failed at managment";
+            else {
+                __log("Failed at moving file");
+            }
         }
     } else {
         if (VERBOSE)
             echo "NOI";
+        else
+            __log("Failed checking tokens");
     }
-}
-else{
-   if(VERBOSE){
-      echo "Missing paramater.";
-      var_dump($_POST);
-      var_dump($_GET);
-      var_dump($_FILES);
-   }
+} else {
+    if (VERBOSE) {
+        echo "Missing paramater.";
+        var_dump($_POST);
+        var_dump($_GET);
+        var_dump($_FILES);
+    } else {
+        __log("Missing parameter");
+    }
 }
