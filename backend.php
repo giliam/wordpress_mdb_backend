@@ -11,7 +11,7 @@ function __log($text, $prefixe = "")
             __log($value, $prefixe);
         }
     } else {
-        file_put_contents("../../logs/consigne.log", $prefixe . $text . "\n", FILE_APPEND);
+        file_put_contents("../logs/consigne.log", $prefixe . $text . "\n", FILE_APPEND);
     }
 }
 
@@ -122,7 +122,7 @@ if (isset($_POST["token"]) && isset($_POST["date"]) && isset($_POST["hour"])) {
             //delete_file($file["name"]);
             if ($query !== false) {
                 header('Content-Type: application/json');
-                echo $query;
+                echo trim($query);
             }
         } else {
             if (VERBOSE)
